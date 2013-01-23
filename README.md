@@ -11,9 +11,9 @@ bug report and patches are welcome
 see demo: <http://jfbootstrap.jujiyangasli.com/>
 
 
-<h2>aditional plugins</h2>
+## aditional plugins
 
-<h4>Drag n drop grid plugin</h4>
+### Drag n drop grid plugin
 
 <b>html</b> (auto)
 ```html
@@ -52,8 +52,8 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 ```
 
 
+### Drag n drop upload plugin
 
-<h4>Drag n drop upload plugin</h4>
 
 <b>html</b> (auto)
 ```html
