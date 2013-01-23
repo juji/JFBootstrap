@@ -1,7 +1,7 @@
 JFBootstrap
 ===========
 
-JFbootstrap = ([Jasny Bootstrap]<http://jasny.github.com/bootstrap/> - icon -  iconic) + ([FontAwesome]<http://fortawesome.github.com/Font-Awesome/> 3.0) + additional plugins
+JFbootstrap = ([Jasny Bootstrap](http://jasny.github.com/bootstrap/) - icon -  iconic) + [FontAwesome](http://fortawesome.github.com/Font-Awesome/> 3.0) + additional plugins
 
 Not intended for release, use it at your own risk.
 Questions on wiki, however, will be answered.
@@ -122,8 +122,8 @@ bug report and patches are welcome
 	}).bind('uploadsuccess',function(jQEvent, serverMessage, file, dndInstance){
 		
 		//check for status
-		serverMessage.status && doSuccessFunction();
-		doErrorFunction();
+		if(serverMessage.status) doSuccessFunction();
+		else doErrorFunction();
 	});
 
 ```
