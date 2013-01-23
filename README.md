@@ -41,7 +41,7 @@ bug report and patches are welcome
 <div id="droparea" 
 	class="dnd-upload" 
 	title="[ Drop images here to upload ]" 
-	data-uploadurl="api/hotel/uploadimage/" 
+	data-uploadurl="uploadimage.php" 
 	data-allowed="image/png,image/jpeg,image/jpg,image/gif"  
 	style="display:inline-block;width:700px;height:500px;">
 	<div class="dnd-fallback well">
