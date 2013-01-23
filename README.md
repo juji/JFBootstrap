@@ -1,7 +1,7 @@
 JFBootstrap
 ===========
 
-JFbootstrap = (Jasny Bootstrap - icon -  iconic) + (FontAwesome) + additional plugins
+JFbootstrap = ([Jasny Bootstrap]<http://jasny.github.com/bootstrap/> - icon -  iconic) + ([FontAwesome]<http://fortawesome.github.com/Font-Awesome/> 3.0) + additional plugins
 
 Not intended for release, use it at your own risk.
 Questions on wiki, however, will be answered.
