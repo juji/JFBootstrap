@@ -3,13 +3,15 @@
 	<head>
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="css/jf-bootstrap.min.css" />
+		<!--script src="js/jquery-1.8.2.min.js"></script-->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<script src="js/jf-bootstrap.min.js"></script>
 	</head>
 	<body style="padding:34px;">
 		<h2>JFBootstrap <small>examples</small></h2>
 		<p><i class="icon-remove"></i></p>
-		<p>JFbootstrap = (Jasny Bootstrap - icon - iconic) + FontAwesome + additional plugins</p>
+		<p>JFbootstrap = (<a href="http://jasny.github.com/bootstrap/" target="_blank">Jasny Bootstrap</a> - icon - iconic) + 
+		<a href="http://fortawesome.github.com/Font-Awesome/" target="_blank">FontAwesome</a> 3.0 + additional plugins</p>
 		<p><a target="_blank"href="https://github.com/juji/JFBootstrap">View on Github</a></p>
 		<p>&nbsp;</p>
 		<div>

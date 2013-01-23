@@ -8,6 +8,8 @@ Questions on wiki, however, will be answered.
 
 bug report and patches are welcome
 
+see demo: <http://jfbootstrap.jujiyangasli.com/>
+
 
 <h2>aditional plugins</h2>
 
