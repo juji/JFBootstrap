@@ -9,29 +9,39 @@ Questions on wiki, however, will be answered.
 bug report and patches are welcome
 
 
-<b>aditional plugins</b>
+<h2>aditional plugins</h2>
 
-Drag n drop grid plugin
+<h4>Drag n drop grid plugin</h4>
+
 ```html
 
 <div id="someparent" class="dnd-grid">
-	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
-	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
 	...
-	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
-	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
 </div>
 
 
 ```
+<b>javascript</b>
 
+```javascript
 
-Drag n drop upload plugin
+	$('.dnd-gridcell').dndgrid();
+
+```
+
+<b>Drag n drop upload plugin</b>
+
 ```html
-<div id="droparea" class="dnd-upload" title="[ Drop images here to upload ]" 
-data-uploadurl="api/hotel/uploadimage/" 
-data-allowed="image/png,image/jpeg,image/jpg,image/gif"  
-style="display:inline-block;width:700px;height:500px;">
+<div id="droparea" 
+	class="dnd-upload" 
+	title="[ Drop images here to upload ]" 
+	data-uploadurl="api/hotel/uploadimage/" 
+	data-allowed="image/png,image/jpeg,image/jpg,image/gif"  
+	style="display:inline-block;width:700px;height:500px;">
 	<div class="dnd-fallback well">
 		<!-- fallback content here -->
 		<input type="file" />
@@ -55,5 +65,57 @@ style="display:inline-block;width:700px;height:500px;">
 		</div>
 	</div>
 </div>
+
+```
+
+<b>javascript</b>
+
+```javascript
+
+	$('.dnd-upload').dndupload({
+		
+		'uploadurl': 'somefile.php', 		//required
+		'allowed': ['image/jpeg','image/png'], 	//optional, default [] (all accepted)
+		'uploadAsync': true, 			//optional, default true
+		'multiple': true 			//optional, default true
+		
+	}).bind('dropped',function( jQEvent, dndDropEvent, dndInstance ){
+		
+		//this event start after ReadFile is done
+		
+		//you can access files dropped by:
+		var filesDropped = dndInstance.files;
+		
+		//each file contains:
+		for(var i in filesDropped){
+			var name = filesDropped[i].name;
+			var id = filesDropped[i].id;
+			var type = filesDropped[i].type;
+			var size = filesDropped[i].size;
+			
+			//javascript Date object
+			var modifiedDate = filesDropped[i].lastModifiedDate;
+			
+			//data of file: 
+			//base 64 for image/*, 
+			//text for text/*, 
+			//binary for anything else
+			var data = filesDropped[i].data;
+		}
+		
+	}).bind('uploadprogress',function( jQEvent, dndDropEvent, percentUploaded, file, dndInstance ){
+		
+		//you can do something like
+		$('#'+file.id+' .dnd-progress-number').css('width',percentUploaded+'%');
+		
+	}).bind('uploaderror',function(jQEvent, serverMessage, file, dndInstance){
+		
+		
+	}).bind('uploadsuccess',function(jQEvent, serverMessage, file, dndInstance){
+		
+		//check for status
+		serverMessage.status && doSuccessFunction();
+		doErrorFunction();
+	});
 
 ```
