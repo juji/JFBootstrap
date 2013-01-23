@@ -25,15 +25,13 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
 	<div class="dnd-gridcell" style="width:100px;height:100px;"></div>
 </div>
-
-
 ```
+
 <b>javascript</b> (if you want to)
 
 ```javascript
 
 	$('.dnd-gridcell').dndgrid();
-
 ```
 
 <h4>Drag n drop upload plugin</h4>
@@ -69,13 +67,13 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 		</div>
 	</div>
 </div>
-
 ```
 
 
-<b>javascript</b> (if you want to)
+<b>javascript</b> (if you must)
 
 ```javascript
+
 
 	$('.dnd-upload').dndupload({
 		
@@ -84,7 +82,7 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 		'uploadAsync': true, 			//optional, default true
 		'multiple': true 			//optional, default true
 		
-	}).bind('dropped',function( jQEvent, dndDropEvent, dndInstance ){
+	}).on('dropped',function( jQEvent, dndDropEvent, dndInstance ){
 		
 		//this event start after ReadFile is done
 		
@@ -112,16 +110,16 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 		//or else, the grid will be activated on $(document).click();
 		$('.dnd-content-exists').dndgrid();
 		
-	}).bind('uploadprogress',function( jQEvent, dndDropEvent, percentUploaded, file, dndInstance ){
+	}).on('uploadprogress',function( jQEvent, dndDropEvent, percentUploaded, file, dndInstance ){
 		
 		//you can do something like
 		$('#'+file.id+' .dnd-progress-number').css('width',percentUploaded+'%');
 		
-	}).bind('uploaderror',function(jQEvent, serverMessage, file, dndInstance){
+	}).on('uploaderror',function(jQEvent, serverMessage, file, dndInstance){
 		
 		doErrorFunction();
 		
-	}).bind('uploadsuccess',function(jQEvent, serverMessage, file, dndInstance){
+	}).on('uploadsuccess',function(jQEvent, serverMessage, file, dndInstance){
 		
 		//check for status
 		if(serverMessage.status) doSuccessFunction();
