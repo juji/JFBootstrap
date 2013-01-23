@@ -13,6 +13,7 @@ bug report and patches are welcome
 
 <h4>Drag n drop grid plugin</h4>
 
+<b>html</b> (auto)
 ```html
 
 <div id="someparent" class="dnd-grid">
@@ -25,7 +26,7 @@ bug report and patches are welcome
 
 
 ```
-<b>javascript</b>
+<b>javascript</b> (if you want to)
 
 ```javascript
 
@@ -33,8 +34,9 @@ bug report and patches are welcome
 
 ```
 
-<b>Drag n drop upload plugin</b>
+<h4>Drag n drop upload plugin</h4>
 
+<b>html</b> (auto)
 ```html
 <div id="droparea" 
 	class="dnd-upload" 
@@ -68,7 +70,7 @@ bug report and patches are welcome
 
 ```
 
-<b>javascript</b>
+<b>javascript</b> (if you want to)
 
 ```javascript
 
@@ -102,6 +104,10 @@ bug report and patches are welcome
 			//binary for anything else
 			var data = filesDropped[i].data;
 		}
+		
+		//do this to automagically start dndgrid
+		//or else, the grid will be activated on $(document).click();
+		$('.dnd-content-exists').dndgrid();
 		
 	}).bind('uploadprogress',function( jQEvent, dndDropEvent, percentUploaded, file, dndInstance ){
 		
