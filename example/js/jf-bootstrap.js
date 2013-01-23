@@ -39,7 +39,7 @@
             ,  'OTransition'      : 'oTransitionEnd otransitionend'
             ,  'transition'       : 'transitionend'
             }
-          , name
+          , name;
 
         for (name in transEndEventNames){
           if (el.style[name] !== undefined) {
@@ -47,17 +47,18 @@
           }
         }
 
-      }())
+      }());
 
       return transitionEnd && {
         end: transitionEnd
       }
 
-    })()
+    })();
 
-  })
+  });
 
-}(window.jQuery);/* ==========================================================
+}(window.jQuery);
+/* ==========================================================
  * bootstrap-alert.js v2.2.2
  * http://twitter.github.com/bootstrap/javascript.html#alerts
  * ==========================================================
@@ -3126,8 +3127,8 @@
 		return typeof window.FileReader != 'undefined' && window.FileReader &&
 			typeof window.FileList != 'undefined' && window.FileList &&
 			typeof window.File != 'undefined' && window.File &&
-			'ondrop' in document && 'dragover' in document &&
-			'dragleave' in document;
+			'ondrop' in document && 'ondragover' in document &&
+			'ondragleave' in document;
 	};
 	
 	DndUpload.checkXhrUpload = function(){
@@ -3249,7 +3250,7 @@
 	__dndgrid = {};
 	__dndgrid.activate = function(elm,trigger){
 		elm = $(elm);
-		if(!trigger) trigger = $('img',elm);
+		if(!trigger) trigger = elm;
 		
 		elm.data('dndsortclone',elm.clone());
 		trigger.css('cursor','move');
@@ -3258,7 +3259,7 @@
 		
 		trigger.bind('mousedown',function(e){
 			
-			var parent = $(this).parents('.dndsortactive');
+			var parent = $(this).is('.dndsortactive') ? $(this) : $(this).parents('.dndsortactive');
 			
 			//mouse position
 			var mpos = {'top':e.pageY,'left':e.pageX};
@@ -3273,7 +3274,7 @@
 			var dpos = {'top':tpos.top - mpos.top - scrl.top,'left':tpos.left - mpos.left - scrl.left};			
 			
 			//elm dimension
-			var tdim = {'width':$(parent).width(),'height':$(parent).height()};
+			var tdim = __dndgrid.posdim(parent);
 			
 			//clone elm to body
 			var c = $($(parent).data('dndsortclone'));
@@ -3424,7 +3425,7 @@
 			'multiple':true,
 			'allowed':[],
 			'uploadAsync':true,
-			'uploadurl':'',
+			'uploadurl':''
 		}
 		
 		$(this).attr('data-multiple') && (option.multiple = $(this).attr('data-multiple'));
@@ -3455,11 +3456,16 @@
 	};
 	
 	//jquery plugin drag n drop sorting
-	$.fn.dndgrid = function(){
-		if($(this).data('dndgrid')) return true;
-		$(this).data('dndgrid', true);
+	$.fn.dndgrid = function(opt){
+		if(!opt) opt = {};
 		return this.each(function(){
-			__dndgrid.activate($(this));
+			if($(this).data('dndgrid')) return true;
+			$(this).data('dndgrid', true);
+			var trigger;
+			if(!('trigger' in opt)) trigger = $(this);
+			else if(!opt.trigger) trigger = $(this);
+			else trigger = $(opt.trigger,this);
+			__dndgrid.activate($(this),trigger);
 		});
 	};	
 	
@@ -3495,7 +3501,7 @@
 					$('.dnd-file-input',this).parent().parent().after(c);
 				}
 				
-				$('.dnd-content-exists').dndgrid();
+				$('.dnd-content-exists').dndgrid({trigger:'img'});
 				
 			}).bind('uploadprogress',function(e,ednd,percent,file,dnd){
 				
@@ -3530,8 +3536,6 @@
 		
 		$('.dnd-grid').each(function(){
 			$('.dnd-gridcell',this).each(function(){
-				if($(this).data('dndgrid')) return;
-				$(this).data('dndgrid',true);
 				$(this).dndgrid();
 			});
 		});

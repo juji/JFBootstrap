@@ -2,8 +2,9 @@
 	
 	$WEBSITE = array(
 		'protocol'=>'http',
-		'host'=>'yello.local',
-		'uploaddir'=>'../../shared/image/'
+		'host'=>'jfbootstrap.jujiyangasli.com',
+		//'uploaddir'=>'/' 			//use trailing slash
+		'uploaddir'=>'uploads/' 	
 	);
 	
 	if(isset($_GET['delete']) && isset($_GET['id'])){
@@ -12,7 +13,7 @@
 		$ext = array_pop($name);
 		$name = $_GET['id'] . '.' . $ext;
 		
-		$n = $WEBSITE['uploaddir']. '/' . $name;
+		$n = $WEBSITE['uploaddir'] . $name;
 		if(file_exists( $n ))
 		unlink($n);
 		
@@ -31,7 +32,7 @@
 		$ext = array_pop($name);
 		$name = $_POST['dndfilename'] . '.' . $ext;
 		
-		move_uploaded_file($_FILES['dnduploaded']['tmp_name'], $WEBSITE['uploaddir'].'/'. $name);
+		move_uploaded_file($_FILES['dnduploaded']['tmp_name'], $WEBSITE['uploaddir'] . $name);
 		
 		send(array(
 		'status'=>true,
