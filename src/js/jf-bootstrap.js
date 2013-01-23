@@ -2419,7 +2419,7 @@
 
     unmask: function() {
       this.$element
-        .unbind(".mask")
+        .off(".mask")
         .removeData("inputmask")
     },
     
@@ -2968,8 +2968,8 @@
 			
 			$(this).data('inputvalidation',true);
 			
-			$(this).unbind('blur input-validate')
-			.bind('blur input-validate',function(e){
+			$(this).off('blur input-validate')
+			.on('blur input-validate',function(e){
 				
 				//console.log(e.type);
 				
@@ -3065,19 +3065,19 @@
 		$('.dnd-fallback',this.element).remove();
 		
 		//event delegation
-		this.element.bind('dragover',function(e){
+		this.element.on('dragover',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			dndthis.element.trigger('over',[e.originalEvent,dndthis]);
 		});
 		
-		this.element.bind('dragleave',function(e){
+		this.element.on('dragleave',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			dndthis.element.trigger('leave',[e.originalEvent,dndthis]);
 		});
 		
-		this.element.bind('drop',function(e){
+		this.element.on('drop',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			DndUpload.dropEvent(e,dndthis);
@@ -3257,7 +3257,7 @@
 		
 		$(elm).addClass('dndsortactive');
 		
-		trigger.bind('mousedown',function(e){
+		trigger.on('mousedown',function(e){
 			
 			var parent = $(this).is('.dndsortactive') ? $(this) : $(this).parents('.dndsortactive');
 			
@@ -3291,7 +3291,7 @@
 			
 			var droparea = __dndgrid.posdim($(this).parent());
 			
-			$('body').bind('mousemove',function(ev){
+			$('body').on('mousemove',function(ev){
 				
 				var moupos = {'top':ev.pageY,'left':ev.pageX};
 				var cc = $('.dndclonedragged');
@@ -3310,7 +3310,7 @@
 					inter.right.after(ori);
 				}
 				
-			}).bind('mouseup',function(){
+			}).on('mouseup',function(){
 				var cc = $('.dndclonedragged');
 				var ori = $('.dndobject');
 				
@@ -3325,8 +3325,8 @@
 	}
 	
 	__dndgrid.off = function(dragged){
-		$('body').unbind('mouseup')
-		.unbind('mousemove');
+		$('body').off('mouseup')
+		.off('mousemove');
 	}
 	
 	__dndgrid.check = function(dragged){
@@ -3438,11 +3438,11 @@
 		$.extend(option,opt);
 		option.droparea = $(option.droparea);
 		
-		$('a.dnd-delete').die('click').live('click',function(){
+		$(this).undelegate('click.dndremove').delegate('a.dnd-delete','click.dndremove',function(){
 			DndUpload.remove($(this).parent().attr('id'),$(this).parents('.dnduploadactive').data('dndupload'));
 		});
 		
-		$('.dnd-file-input',this).die('change').live('change',function(e){
+		$(this).undelegate('change.dndfileinput').delegate('.dnd-file-input','change.dndfileinput',function(e){
 			var par = $(this).parents('.dnduploadactive');
 			var dnd = par.data('dndupload');
 			DndUpload.dropEvent(e,dnd);
@@ -3484,7 +3484,7 @@
 			$('.dnd-content-exists',this).remove();
 			
 			$(this).dndupload()
-			.bind('dropped',function(e,ednd,dnd){
+			.on('dropped',function(e,ednd,dnd){
 				
 				//console.log('dropped');
 				//console.log(dnd);
@@ -3503,18 +3503,18 @@
 				
 				$('.dnd-content-exists').dndgrid({trigger:'img'});
 				
-			}).bind('uploadprogress',function(e,ednd,percent,file,dnd){
+			}).on('uploadprogress',function(e,ednd,percent,file,dnd){
 				
 				//console.log('uploadprogress: '+percent);
 				$('#'+file.id+' .dnd-progress-number').css('width',percent+'%');
 				
-			}).bind('uploaderror',function(e,message,file,dnd){
+			}).on('uploaderror',function(e,message,file,dnd){
 				
 				console.log('uploaderror');
 				console.log(message);
-				$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/EFEFEF/AAAAAA&text=upload+error');
+				$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/ff0000/ffffff&text=error');
 				
-			}).bind('uploadsuccess',function(e,message,file,dnd){
+			}).on('uploadsuccess',function(e,message,file,dnd){
 				
 				if(typeof message.status != 'undefined' && message.status){
 					//console.log('uploadsuccess');
@@ -3527,7 +3527,7 @@
 					$('#'+file.id+' img').data('url',file.url);
 					
 				}else{
-					$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/EFEFEF/AAAAAA&text=upload+error');
+					$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/ff0000/ffffff&text=error');
 					console.log('uploaderror');
 					console.log(message);
 				}
