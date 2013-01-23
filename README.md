@@ -70,6 +70,7 @@ bug report and patches are welcome
 
 ```
 
+
 <b>javascript</b> (if you want to)
 
 ```javascript
@@ -116,6 +117,7 @@ bug report and patches are welcome
 		
 	}).bind('uploaderror',function(jQEvent, serverMessage, file, dndInstance){
 		
+		doErrorFunction();
 		
 	}).bind('uploadsuccess',function(jQEvent, serverMessage, file, dndInstance){
 		
