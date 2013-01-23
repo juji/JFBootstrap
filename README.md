@@ -34,6 +34,25 @@ see demo: <http://jfbootstrap.jujiyangasli.com/>
 	$('.dnd-gridcell').dndgrid();
 ```
 
+
+<b>other usage</b>
+```html
+
+<div id="someparent" class="dnd-grid">
+	<div class="dnd-gridcell" style="width:100px;height:100px;">
+		<img src=".." class="img_trigger" />
+	</div>
+</div>
+<script>
+	
+	//mousedown on .img_trigger will move .dnd-gridcell
+	$('.dnd-gridcell').dndgrid({'trigger':'.img_trigger'});
+	
+</script>
+```
+
+
+
 <h4>Drag n drop upload plugin</h4>
 
 <b>html</b> (auto)
