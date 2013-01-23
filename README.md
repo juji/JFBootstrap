@@ -11,7 +11,19 @@ bug report and patches are welcome
 
 <b>aditional plugins</b>
 
-Drag n drop sortable plugin
+Drag n drop grid plugin
+```html
+
+<div id="someparent" class="dnd-grid">
+	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+	...
+	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+	<div class="dnd-gridcell" style="display:inline-block;width:100px;height:100px;"></div>
+</div>
+
+
+```
 
 
 Drag n drop upload plugin
