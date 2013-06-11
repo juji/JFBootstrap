@@ -39,7 +39,7 @@
             ,  'OTransition'      : 'oTransitionEnd otransitionend'
             ,  'transition'       : 'transitionend'
             }
-          , name;
+          , name
 
         for (name in transEndEventNames){
           if (el.style[name] !== undefined) {
@@ -47,18 +47,17 @@
           }
         }
 
-      }());
+      }())
 
       return transitionEnd && {
         end: transitionEnd
       }
 
-    })();
+    })()
 
-  });
+  })
 
-}(window.jQuery);
-/* ==========================================================
+}(window.jQuery);/* ==========================================================
  * bootstrap-alert.js v2.2.2
  * http://twitter.github.com/bootstrap/javascript.html#alerts
  * ==========================================================
@@ -391,9 +390,9 @@
         this.$element.trigger('slid')
       }
 
-      isCycling && this.cycle()
+      isCycling && this.cycle();
 
-      return this
+      return this;
     }
 
   }
@@ -2419,7 +2418,7 @@
 
     unmask: function() {
       this.$element
-        .off(".mask")
+        .unbind(".mask")
         .removeData("inputmask")
     },
     
@@ -2738,6 +2737,7 @@
       this.$hidden.val('')
       this.$hidden.attr('name', '')
       this.$input.attr('name', this.name)
+      this.$element.data('file',e.target.files[0]);
 
       if (this.type === "image" && this.$preview.length > 0 && (typeof file.type !== "undefined" ? file.type.match('image.*') : file.name.match('\\.(gif|png|jpe?g)$')) && typeof FileReader !== "undefined") {
         var reader = new FileReader()
@@ -2745,6 +2745,14 @@
         var element = this.$element
 
         reader.onload = function(e) {
+			var img = new Image;
+			img.onload = function(){
+				element.data('file').dimension = {
+					'width':img.width,
+					'height':img.height
+				}
+			}
+			img.src = e.target.result;
           preview.html('<img src="' + e.target.result + '" ' + (preview.css('max-height') != 'none' ? 'style="max-height: ' + preview.css('max-height') + ';"' : '') + ' />')
           element.addClass('fileupload-exists').removeClass('fileupload-new')
         }
@@ -2760,6 +2768,7 @@
       this.$hidden.val('')
       this.$hidden.attr('name', this.name)
       this.$input.attr('name', '')
+      this.$element.data('file',false);
 
       //ie8+ doesn't support changing the value of input with type=file so clone instead
       if($.browser.msie){
@@ -2968,8 +2977,8 @@
 			
 			$(this).data('inputvalidation',true);
 			
-			$(this).off('blur input-validate')
-			.on('blur input-validate',function(e){
+			$(this).unbind('blur input-validate')
+			.bind('blur input-validate',function(e){
 				
 				//console.log(e.type);
 				
@@ -3050,7 +3059,7 @@
 		
 		var dndthis = this;
 		
-		//check for features
+		/*/check for features
 		if(!DndUpload.checkFeature()) {
 			this.fallback.call(this); return;
 		}
@@ -3058,6 +3067,9 @@
 		if(this.option.uploadAsync && !DndUpload.checkXhrUpload()) {
 			this.fallback.call(this); return;
 		}
+		/*/
+		this.fallback.call(this); return;
+		/**/
 		
 		$('.dnd-content',this.element).removeClass('hide')
 		.append('<h5 class="dndtitle muted">'+this.element.attr('title')+'</h5>');
@@ -3065,19 +3077,19 @@
 		$('.dnd-fallback',this.element).remove();
 		
 		//event delegation
-		this.element.on('dragover',function(e){
+		this.element.bind('dragover',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			dndthis.element.trigger('over',[e.originalEvent,dndthis]);
 		});
 		
-		this.element.on('dragleave',function(e){
+		this.element.bind('dragleave',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			dndthis.element.trigger('leave',[e.originalEvent,dndthis]);
 		});
 		
-		this.element.on('drop',function(e){
+		this.element.bind('drop',function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			DndUpload.dropEvent(e,dndthis);
@@ -3126,10 +3138,55 @@
 	DndUpload.checkFeature = function(){
 		return typeof window.FileReader != 'undefined' && window.FileReader &&
 			typeof window.FileList != 'undefined' && window.FileList &&
-			typeof window.File != 'undefined' && window.File &&
-			'ondrop' in document && 'ondragover' in document &&
-			'ondragleave' in document;
+			typeof window.File != 'undefined' && window.File && 
+			DndUpload.checkDragAndDrop();
+			
+			/*
+			 *  &&
+			'ondrop' in document && 'dragover' in document &&
+			'dragleave' in document
+			*/
 	};
+	
+	DndUpload.checkDragAndDrop = function() {
+
+      var TAGNAMES = {
+        'select': 'input', 'change': 'input',
+        'submit': 'form', 'reset': 'form',
+        'error': 'img', 'load': 'img', 'abort': 'img'
+      };
+
+      function isEventSupported( eventName, element ) {
+
+        element = element || document.createElement(TAGNAMES[eventName] || 'div');
+        eventName = 'on' + eventName;
+
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+        var isSupported = eventName in element;
+
+        if ( !isSupported ) {
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          if ( !element.setAttribute ) {
+            element = document.createElement('div');
+          }
+          if ( element.setAttribute && element.removeAttribute ) {
+            element.setAttribute(eventName, '');
+            isSupported = typeof element[eventName] == 'function';
+
+            // If property was created, "remove it" (by setting value to `undefined`)
+            if ( typeof element[eventName] != 'undefined' ) {
+              element[eventName] = undefined;
+            }
+            element.removeAttribute(eventName);
+          }
+        }
+
+        element = null;
+        return isSupported;
+      }
+      return isEventSupported('drop') && isEventSupported('dragover') && isEventSupported('dragleave');
+    };
+	
 	
 	DndUpload.checkXhrUpload = function(){
 		var xhr = $.ajaxSettings.xhr();
@@ -3243,14 +3300,26 @@
 		console.log('dndupload cannot continue due to incompatible feature');
 		$('.dnd-fallback',this.element).removeClass('hide');
 		$('.dnd-content',this.element).remove();
+		$(this.element).attr('title','');
 	};
+	
+	_dp.addImage = function(imgsrc){
+		$('.dndtitle',this.element).remove();
+		if($('.dnd-content',this.element).length){
+			var c = $(this.element).data('filetemplate').clone();
+			$('img',c).attr('src',imgsrc);
+			c.addClass('success');
+			$('.dnd-progress-number',c).css('width','100%');
+			$('.dnd-file-input',this.element).parent().parent().after(c);
+		}
+	}
 	
 	
 	//sorting
 	__dndgrid = {};
 	__dndgrid.activate = function(elm,trigger){
 		elm = $(elm);
-		if(!trigger) trigger = elm;
+		if(!trigger) trigger = $('img',elm);
 		
 		elm.data('dndsortclone',elm.clone());
 		trigger.css('cursor','move');
@@ -3259,7 +3328,7 @@
 		
 		trigger.on('mousedown',function(e){
 			
-			var parent = $(this).is('.dndsortactive') ? $(this) : $(this).parents('.dndsortactive');
+			var parent = $(this).parents('.dndsortactive').get(0);
 			
 			//mouse position
 			var mpos = {'top':e.pageY,'left':e.pageX};
@@ -3274,7 +3343,7 @@
 			var dpos = {'top':tpos.top - mpos.top - scrl.top,'left':tpos.left - mpos.left - scrl.left};			
 			
 			//elm dimension
-			var tdim = __dndgrid.posdim(parent);
+			var tdim = {'width':$(parent).width(),'height':$(parent).height()};
 			
 			//clone elm to body
 			var c = $($(parent).data('dndsortclone'));
@@ -3317,6 +3386,7 @@
 				__dndgrid.off();
 				ori.fadeTo(0,1).removeClass('dndobject');
 				cc.detach();
+				ori.trigger('sortdropped');
 			});
 			
 			return false;
@@ -3325,8 +3395,8 @@
 	}
 	
 	__dndgrid.off = function(dragged){
-		$('body').off('mouseup')
-		.off('mousemove');
+		$('body').unbind('mouseup')
+		.unbind('mousemove');
 	}
 	
 	__dndgrid.check = function(dragged){
@@ -3425,7 +3495,7 @@
 			'multiple':true,
 			'allowed':[],
 			'uploadAsync':true,
-			'uploadurl':''
+			'uploadurl':'',
 		}
 		
 		$(this).attr('data-multiple') && (option.multiple = $(this).attr('data-multiple'));
@@ -3438,11 +3508,11 @@
 		$.extend(option,opt);
 		option.droparea = $(option.droparea);
 		
-		$(this).undelegate('click.dndremove').delegate('a.dnd-delete','click.dndremove',function(){
+		$('a.dnd-delete').die('click').live('click',function(){
 			DndUpload.remove($(this).parent().attr('id'),$(this).parents('.dnduploadactive').data('dndupload'));
 		});
 		
-		$(this).undelegate('change.dndfileinput').delegate('.dnd-file-input','change.dndfileinput',function(e){
+		$('.dnd-file-input',this).die('change').live('change',function(e){
 			var par = $(this).parents('.dnduploadactive');
 			var dnd = par.data('dndupload');
 			DndUpload.dropEvent(e,dnd);
@@ -3456,16 +3526,12 @@
 	};
 	
 	//jquery plugin drag n drop sorting
-	$.fn.dndgrid = function(opt){
-		if(!opt) opt = {};
+	$.fn.dndgrid = function(par){
+		var trigger = typeof par.trigger =='undefined' ? false : par.trigger;
 		return this.each(function(){
 			if($(this).data('dndgrid')) return true;
 			$(this).data('dndgrid', true);
-			var trigger;
-			if(!('trigger' in opt)) trigger = $(this);
-			else if(!opt.trigger) trigger = $(this);
-			else trigger = $(opt.trigger,this);
-			__dndgrid.activate($(this),trigger);
+			__dndgrid.activate($(this),$(trigger,this));
 		});
 	};	
 	
@@ -3484,7 +3550,7 @@
 			$('.dnd-content-exists',this).remove();
 			
 			$(this).dndupload()
-			.on('dropped',function(e,ednd,dnd){
+			.bind('dropped',function(e,ednd,dnd){
 				
 				//console.log('dropped');
 				//console.log(dnd);
@@ -3501,20 +3567,22 @@
 					$('.dnd-file-input',this).parent().parent().after(c);
 				}
 				
-				$('.dnd-content-exists').dndgrid({trigger:'img'});
+				$('.dnd-content-exists').dndgrid();
 				
-			}).on('uploadprogress',function(e,ednd,percent,file,dnd){
+			}).bind('uploadprogress',function(e,ednd,percent,file,dnd){
 				
 				//console.log('uploadprogress: '+percent);
 				$('#'+file.id+' .dnd-progress-number').css('width',percent+'%');
+				$('#'+file.id).removeClass('error').addClass('onprogress').removeClass('success');
 				
-			}).on('uploaderror',function(e,message,file,dnd){
+			}).bind('uploaderror',function(e,message,file,dnd){
 				
 				console.log('uploaderror');
 				console.log(message);
-				$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/ff0000/ffffff&text=error');
+				$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/EFEFEF/AAAAAA&text=upload+error');
+				$('#'+file.id).addClass('error').removeClass('onprogress').removeClass('success');
 				
-			}).on('uploadsuccess',function(e,message,file,dnd){
+			}).bind('uploadsuccess',function(e,message,file,dnd){
 				
 				if(typeof message.status != 'undefined' && message.status){
 					//console.log('uploadsuccess');
@@ -3525,11 +3593,13 @@
 					$('#'+file.id+' img').attr('src',file.url);
 					
 					$('#'+file.id+' img').data('url',file.url);
+					$('#'+file.id).removeClass('error').removeClass('onprogress').addClass('success');
 					
 				}else{
-					$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/ff0000/ffffff&text=error');
+					$('#'+file.id+' img').attr('src','http://www.placehold.it/150X150/EFEFEF/AAAAAA&text=upload+error');
 					console.log('uploaderror');
 					console.log(message);
+					$('#'+file.id).addClass('error').removeClass('onprogress').removeClass('success');
 				}
 			});
 		});
@@ -3549,3 +3619,153 @@
 	});
 	
 }(window.jQuery,window));
+
+/*
+ * 
+ * 
+ * dropdownInput by jujiyangasli@gmail.com
+ * 
+ */
+ (function($,window){
+	 
+	 
+	$.fn.dropdownInput = function(data){
+		var DDI = function(elm,setting){
+		
+			this.setting = setting;
+			this.elm = elm;
+			
+			this.match = [];
+			this.selection;
+			this.lastLength = 0;
+			this.regex = /[-[\]{}()*+?.,\\^$|#\s]/g;
+			
+		};
+			
+		DDI.prototype.search = function(str){
+			this.match = [];
+			if(!str) return this.match;
+			var r = new RegExp(str.replace(this.regex, "\\$&"),'i');
+			for(var i in this.setting.data) {
+				if(data[i].match(r)) this.match.push(data[i]);
+			}
+			return this.match;
+		}
+		
+		DDI.prototype.next = function(){
+			var n = $('.selected',this.selection);
+			if(!n.next().length) return;
+			n.next().addClass('selected');
+			n.removeClass('selected');
+		}
+		
+		DDI.prototype.prev = function(){
+			var n = $('.selected',this.selection);
+			if(!n.prev().length) return;
+			n.prev().addClass('selected');
+			n.removeClass('selected');
+		}
+		
+		DDI.prototype.enter = function(){
+			var sel = this.getSelection();
+			if(!sel && this.setting.exact) return;
+			else if(sel) this.element.val(sel);
+			this.remove.call(this);
+		}
+		
+		DDI.prototype.onkeyup = function(){
+			var val = this.element.val();
+			if(val.length == this.lastLength) return;
+			
+			this.search.call(this,val);
+			if(!tthis.match.length && this.setting.exact){
+				val = val.substr(0,this.lastLength);
+				this.element.val(val);
+				return;
+			}
+			
+			this.createElement.call(this,t,val);
+			this.lastLength = val.length;
+		}
+		
+		DDI.prototype.createElement = function(str){
+			
+			var match = this.match;
+			var f = '<div class="dropdownselection">';
+			var n = 0;
+			for(var i in match){
+				var r = new RegExp(str.replace(this.regex, "\\$&"),'i');
+				
+				if(!n) f+='<div class="dropdownoption selected">';
+				else f+='<div class="dropdownoption">';
+				
+				f+= match[i].replace(r,'<b>'+str+'</b>');
+				f+='</div>';
+				n++;
+			}
+			f+='</div>';
+			
+			this.remove.call(this);
+			$('body').append(f);
+			
+			this.selection = $($('.dropdownselection').last());
+			var off = this.element.offset();
+			var w = this.element.outerWidth() || this.element.width();
+			var h = this.element.outerHeight() || this.element.height();
+			
+			this.selection.css({
+				'top':(top+h+8)+'px',
+				'left':(left)+'px',
+				'min-width':w+'px',
+			});
+		}
+		
+		DDI.prototype.remove = function(){
+			this.lastLength = 0;
+			this.selection.remove();
+		}
+		
+		DDI.prototype.getSelection = function(){
+			var n = $('.selected',this.selection);
+			if(!n.length) return false;
+			return n.text();
+		}
+		
+		
+	
+		var setting = {
+			'data':[],
+			'exact':false
+		}
+		if(!data);
+		else if(Object.prototype.toString.call( data ) === '[object Array]'){
+			setting.data = data;
+		}else if (typeof data == 'object'){
+			setting = $.extend(setting,data);
+		}
+		
+		if(!setting.data) return this;
+		
+		return $(this).each(function(){
+			if($(this).data('dropdowninput')) return true;
+			$(this).data('dropdowninput',new DDI(setting))
+			.keyup(function(e){
+				
+				if(e.which==38) {e.preventDefault(); $(this).data('dropdowninput').prev.call($(this).data('dropdowninput'));}
+				else if(e.which==40) {e.preventDefault(); $(this).data('dropdowninput').next.call($(this).data('dropdowninput'));}
+				else if(e.which==13) {e.preventDefault(); $(this).data('dropdowninput').enter.call($(this).data('dropdowninput'));}
+				else $(this).data('dropdowninput').onkeyup.call($(this).data('dropdowninput'));
+				
+			}).blur(function(){
+				
+				$(this).data('dropdowninput').remove.call($(this).data('dropdowninput'));
+				
+			});
+			
+			
+		});
+	
+	}
+	 
+ }(window.jQuery,window));
+ 
